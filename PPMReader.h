@@ -13,7 +13,7 @@ License: GNU GPL v3
 
 #include "Arduino.h"
 
-#define PMM_CHANNEL_COUNT 16
+#define PPMREADER_PMM_CHANNEL_COUNT 16
 
 class PPMReader
 {
@@ -21,7 +21,7 @@ class PPMReader
     PPMReader(int pin, int interrupt);
     int get(uint8_t channel);
     static void handler();
-    volatile static int ppm[PMM_CHANNEL_COUNT];
+    volatile static int ppm[PPMREADER_PMM_CHANNEL_COUNT];
     void start(void);
     void stop(void);
   private:

@@ -11,7 +11,7 @@ License: GNU GPL v3
 #include "PPMReader.h"
 #include "Arduino.h"
 
-volatile int PPMReader::ppm[PMM_CHANNEL_COUNT];
+volatile int PPMReader::ppm[PPMREADER_PMM_CHANNEL_COUNT];
 
 PPMReader::PPMReader(int pin, int interrupt)
 {
@@ -47,8 +47,7 @@ static void PPMReader::handler()
     counter = (currentMicros - previousCounter) * 2;
     previousCounter = currentMicros;
 
-    if (counter < 1020)
-    { //must be a pulse
+    if (counter < 710) { //must be a pulse
         pulse = counter;
     }
     else if (counter > 3820)
