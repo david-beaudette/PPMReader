@@ -18,7 +18,7 @@ License: GNU GPL v3
 class PPMReader
 {
   public:
-    PPMReader(int pin, int interrupt);
+    PPMReader(int pin, int interrupt, bool useTimer);
     int get(uint8_t channel);
     static void handler();
     volatile static int ppm[PPMREADER_PMM_CHANNEL_COUNT];

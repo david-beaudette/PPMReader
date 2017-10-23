@@ -1,6 +1,6 @@
 #include "PPMReader.h"
 
-PPMReader ppmReader(2, 0);
+PPMReader ppmReader(2, 0, false);
 
 void setup()
 {

@@ -11,12 +11,16 @@ License: GNU GPL v3
 #include "PPMReader.h"
 #include "Arduino.h"
 
-volatile int PPMReader::ppm[PPMREADER_PMM_CHANNEL_COUNT];
+#define CPU_SPEED_MULTIPLIER (F_CPU/8000000)
 
-PPMReader::PPMReader(int pin, int interrupt)
+volatile int PPMReader::ppm[PPMREADER_PMM_CHANNEL_COUNT];
+volatile bool ppmReaderUseTimer = false;
+
+PPMReader::PPMReader(int pin, int interrupt, bool useTimer)
 {
     _pin = pin;
     _interrupt = interrupt;
+    ppmReaderUseTimer = useTimer;
 
     pinMode(_pin, INPUT);
     attachInterrupt(_interrupt, PPMReader::handler, CHANGE);
@@ -43,20 +47,25 @@ static void PPMReader::handler()
     static unsigned long previousCounter = 0;
     static unsigned long currentMicros = 0;
 
-    currentMicros = micros();
-    counter = (currentMicros - previousCounter) * 2;
-    previousCounter = currentMicros;
+    if (ppmReaderUseTimer) {
+        counter = TCNT1 * CPU_SPEED_MULTIPLIER;
+        TCNT1 = 0;
+    } else {
+        currentMicros = micros();
+        counter = currentMicros - previousCounter;
+        previousCounter = currentMicros;
+    }
 
-    if (counter < 710) { //must be a pulse
+    if (counter < 510) { //must be a pulse
         pulse = counter;
     }
-    else if (counter > 3820)
+    else if (counter > 1910)
     { //sync
         channel = 0;
     }
     else
     { //servo values between 810 and 2210 will end up here
-        ppm[channel] = (counter + pulse) / 2;
+        ppm[channel] = counter + pulse;
         channel++;
     }
 }

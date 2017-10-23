@@ -24,7 +24,7 @@ On Arduino UNO/Pro Mini with PPM signal attached to pin 2 (interrupt 0), example
 #include "PPMReader.h"
 
 // PPMReader(pin, interrupt)
-PPMReader ppmReader(2, 0);
+PPMReader ppmReader(2, 0, false);
 
 void setup()
 {
@@ -42,6 +42,18 @@ void loop()
   count = 0;
   delay(500);
 }
+```
+
+## Timer1 mode
+
+When `PPMReader ppmReader(2, 0, true);` is used, library expect Timer1 will be configured to run with prescaler `8`, so than will be incremeneted every 0.5us at 16MHz and 1us at 8MHz ATmegas. It will also override TCNT1 so us use with caution. It gives better accuracy, but can cause conflicts with other libraries that uese `Timer`.
+
+To initialize `Timer1` use following code in `setup` block:
+
+```
+TCCR1A = 0;  //reset timer1
+TCCR1B = 0;
+TCCR1B |= (1 << CS11);  //set timer1 to increment every 0,5 us or 1us on 8MHz
 ```
 
 ## License
