@@ -24,6 +24,7 @@ class PPMReader
     volatile static int ppm[PPMREADER_PMM_CHANNEL_COUNT];
     void start(void);
     void stop(void);
+    bool isReceiving(void);
   private:
     int _pin;
     int _interrupt;
