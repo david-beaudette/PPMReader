@@ -49,7 +49,7 @@ void PPMReader::stop(void) {
     detachInterrupt(_interrupt);
 }
 
-static void PPMReader::handler()
+void PPMReader::handler()
 {
     static unsigned int pulse;
     static unsigned long counter;
